@@ -1,0 +1,20 @@
+{
+    "totalSales": 2850000000,
+    "monthlyGrowth": 15.2,
+    "totalOrders": 12450,
+    "averageOrderValue": 228915,
+    "topProducts": [
+        {
+            "name": "Sunscreen SPF 50",
+            "sales": 29450000
+        },
+        {
+            "name": "Lipstick Matte",
+            "sales": 20470000
+        },
+        {
+            "name": "Serum Vitamin C",
+            "sales": 30000000
+        }
+    ]
+}

@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BeautyCare Admin Dashboard
 
-## Getting Started
+Dashboard admin untuk mengelola penjualan produk kecantikan dengan tampilan glass UI menggunakan Tailwind CSS.
 
-First, run the development server:
+## Fitur
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- ✅ Login Page dengan dummy authentication
+- ✅ Dashboard dengan chart penjualan menggunakan Chart.js
+- ✅ User Management Page
+- ✅ Product Management Page
+- ✅ Responsive design untuk laptop dan mobile
+- ✅ Glass UI design dengan Tailwind CSS
+- ✅ Data statis dari JSON lokal
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Teknologi
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js 16.0.1 (Turbopack)
+- TypeScript
+- Tailwind CSS
+- Chart.js
+- React Chart.js 2
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup dan Instalasi
 
-## Learn More
+1. Clone repository ini
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Jalankan development server:
+   ```bash
+   npm run dev
+   ```
+4. Buka http://localhost:3000 di browser
 
-To learn more about Next.js, take a look at the following resources:
+## Struktur Projek
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+statistik-app/
+├── app/
+│   ├── components/
+│   │   ├── header.tsx
+│   │   └── sidebar.tsx
+│   ├── data/
+│   │   ├── data_penjualan.json
+│   │   ├── data_produk.json
+│   │   ├── data_sales.json
+│   │   └── data_user.json
+│   ├── dashboard/
+│   │   └── page.tsx
+│   ├── login/
+│   │   └── page.tsx
+│   ├── products/
+│   │   └── page.tsx
+│   ├── users/
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── globals.css

@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "name": "Serum Vitamin C",
+        "category": "Skincare",
+        "price": 250000,
+        "stock": 45,
+        "sales": 120,
+        "rating": 4.8
+    },
+    {
+        "id": 2,
+        "name": "Lipstick Matte",
+        "category": "Makeup",
+        "price": 89000,
+        "stock": 78,
+        "sales": 230,
+        "rating": 4.6
+    },
+    {
+        "id": 3,
+        "name": "Face Mist",
+        "category": "Skincare",
+        "price": 120000,
+        "stock": 32,
+        "sales": 95,
+        "rating": 4.7
+    },
+    {
+        "id": 4,
+        "name": "Eyeshadow Palette",
+        "category": "Makeup",
+        "price": 180000,
+        "stock": 56,
+        "sales": 67,
+        "rating": 4.5
+    },
+    {
+        "id": 5,
+        "name": "Sunscreen SPF 50",
+        "category": "Skincare",
+        "price": 95000,
+        "stock": 89,
+        "sales": 310,
+        "rating": 4.9
+    },
+    {
+        "id": 6,
+        "name": "Mascara Waterproof",
+        "category": "Makeup",
+        "price": 75000,
+        "stock": 43,
+        "sales": 145,
+        "rating": 4.4
+    }
+]
