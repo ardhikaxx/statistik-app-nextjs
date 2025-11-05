@@ -32,15 +32,53 @@ ChartJS.register(
     ArcElement
 );
 
+// Define types for your data
+interface PenjualanItem {
+    day: string;
+    sales: number;
+    orders: number;
+}
+
+interface MonthlyItem {
+    month: string;
+    sales: number;
+    target: number;
+}
+
+interface Product {
+    category: string;
+    // tambahkan properti lain jika ada
+}
+
+interface SalesData {
+    totalSales: number;
+    monthlyGrowth: number;
+    totalOrders: number;
+    averageOrderValue: number;
+    topProducts: Array<{
+        name: string;
+        sales: number;
+    }>;
+}
+
+// Type assertions untuk data JSON
+const penjualanDataTyped = penjualanData as {
+    last7Days: PenjualanItem[];
+    monthly: MonthlyItem[];
+};
+
+const produkDataTyped = produkData as Product[];
+const salesDataTyped = salesData as SalesData;
+
 export default function Dashboard() {
     const chartRef = useRef<ChartJS<'line'>>(null);
 
     const salesChartData = {
-        labels: penjualanData.last7Days.map(item => item.day),
+        labels: penjualanDataTyped.last7Days.map(item => item.day),
         datasets: [
             {
                 label: 'Penjualan (Rp)',
-                data: penjualanData.last7Days.map(item => item.sales),
+                data: penjualanDataTyped.last7Days.map(item => item.sales),
                 borderColor: 'rgb(99, 102, 241)',
                 backgroundColor: 'rgba(99, 102, 241, 0.1)',
                 borderWidth: 3,
@@ -49,7 +87,7 @@ export default function Dashboard() {
             },
             {
                 label: 'Jumlah Order',
-                data: penjualanData.last7Days.map(item => item.orders * 100000),
+                data: penjualanDataTyped.last7Days.map(item => item.orders * 100000),
                 borderColor: 'rgb(236, 72, 153)',
                 backgroundColor: 'rgba(236, 72, 153, 0.1)',
                 borderWidth: 3,
@@ -60,11 +98,11 @@ export default function Dashboard() {
     };
 
     const monthlyChartData = {
-        labels: penjualanData.monthly.map(item => item.month),
+        labels: penjualanDataTyped.monthly.map(item => item.month),
         datasets: [
             {
                 label: 'Actual Sales',
-                data: penjualanData.monthly.map(item => item.sales),
+                data: penjualanDataTyped.monthly.map(item => item.sales),
                 backgroundColor: 'rgba(99, 102, 241, 0.8)',
                 borderColor: 'rgb(99, 102, 241)',
                 borderWidth: 2,
@@ -72,7 +110,7 @@ export default function Dashboard() {
             },
             {
                 label: 'Sales Target',
-                data: penjualanData.monthly.map(item => item.target),
+                data: penjualanDataTyped.monthly.map(item => item.target),
                 backgroundColor: 'rgba(236, 72, 153, 0.6)',
                 borderColor: 'rgb(236, 72, 153)',
                 borderWidth: 2,
@@ -81,8 +119,8 @@ export default function Dashboard() {
         ],
     };
 
-    // Product Category Data for Doughnut
-    const categoryData = produkData.reduce((acc: any, product) => {
+    // Product Category Data for Doughnut - FIXED: menghilangkan any
+    const categoryData = produkDataTyped.reduce((acc: Record<string, number>, product) => {
         acc[product.category] = (acc[product.category] || 0) + 1;
         return acc;
     }, {});
@@ -166,8 +204,8 @@ export default function Dashboard() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-indigo-100">Total Sales</p>
-                                            <h3 className="text-2xl font-bold mt-2">{formatCurrency(salesData.totalSales)}</h3>
-                                            <p className="text-indigo-100 text-sm mt-1">+{salesData.monthlyGrowth}% from last month</p>
+                                            <h3 className="text-2xl font-bold mt-2">{formatCurrency(salesDataTyped.totalSales)}</h3>
+                                            <p className="text-indigo-100 text-sm mt-1">+{salesDataTyped.monthlyGrowth}% from last month</p>
                                         </div>
                                         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,7 +220,7 @@ export default function Dashboard() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-gray-600">Total Orders</p>
-                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{salesData.totalOrders.toLocaleString()}</h3>
+                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{salesDataTyped.totalOrders.toLocaleString()}</h3>
                                             <p className="text-green-600 text-sm mt-1">+12.5% growth</p>
                                         </div>
                                         <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -214,7 +252,7 @@ export default function Dashboard() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-gray-600">Avg. Order Value</p>
-                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{formatCurrency(salesData.averageOrderValue)}</h3>
+                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{formatCurrency(salesDataTyped.averageOrderValue)}</h3>
                                             <p className="text-purple-600 text-sm mt-1">+5.2% from last month</p>
                                         </div>
                                         <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -270,7 +308,7 @@ export default function Dashboard() {
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg lg:col-span-2">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Selling Products</h3>
                                     <div className="space-y-4">
-                                        {salesData.topProducts.map((product, index) => (
+                                        {salesDataTyped.topProducts.map((product, index) => (
                                             <div key={index} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
                                                 <div className="flex items-center space-x-4">
                                                     <div className="w-10 h-10 bg-linear-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold">
@@ -282,7 +320,7 @@ export default function Dashboard() {
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-sm font-medium text-gray-900">{Math.round((product.sales / salesData.totalSales) * 100)}%</p>
+                                                    <p className="text-sm font-medium text-gray-900">{Math.round((product.sales / salesDataTyped.totalSales) * 100)}%</p>
                                                     <p className="text-xs text-gray-600">of total sales</p>
                                                 </div>
                                             </div>
