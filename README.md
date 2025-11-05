@@ -2,6 +2,10 @@
 
 Dashboard admin untuk mengelola penjualan produk kecantikan dengan tampilan glass UI menggunakan Tailwind CSS.
 
+## Screenshoot
+
+https://github.com/ardhikaxx/statistik-app-nextjs/blob/main/public/images/dashboard.png
+
 ## Fitur
 
 - ✅ Login Page dengan dummy authentication
