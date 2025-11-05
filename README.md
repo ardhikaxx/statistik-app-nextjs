@@ -5,6 +5,10 @@ Dashboard admin untuk mengelola penjualan produk kecantikan dengan tampilan glas
 ## Screenshoot
 
 <img src="https://github.com/ardhikaxx/statistik-app-nextjs/blob/main/public/images/dashboard.png"/>
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+  <img src="https://github.com/ardhikaxx/statistik-app-nextjs/blob/main/public/images/dashboard-responsive.png?raw=true" alt="Dashboard Responsive" style="width: 300px; border-radius: 8px;">
+  <img src="https://github.com/ardhikaxx/statistik-app-nextjs/blob/main/public/images/sidebar-responsive.png?raw=true" alt="Sidebar Responsive" style="width: 300px; border-radius: 8px;">
+</div>
 
 ## Fitur
 
