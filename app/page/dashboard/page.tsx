@@ -32,7 +32,6 @@ ChartJS.register(
     ArcElement
 );
 
-// Define types for your data
 interface PenjualanItem {
     day: string;
     sales: number;
@@ -47,7 +46,6 @@ interface MonthlyItem {
 
 interface Product {
     category: string;
-    // tambahkan properti lain jika ada
 }
 
 interface SalesData {
@@ -61,7 +59,6 @@ interface SalesData {
     }>;
 }
 
-// Type assertions untuk data JSON
 const penjualanDataTyped = penjualanData as {
     last7Days: PenjualanItem[];
     monthly: MonthlyItem[];
@@ -119,7 +116,6 @@ export default function Dashboard() {
         ],
     };
 
-    // Product Category Data for Doughnut - FIXED: menghilangkan any
     const categoryData = produkDataTyped.reduce((acc: Record<string, number>, product) => {
         acc[product.category] = (acc[product.category] || 0) + 1;
         return acc;
@@ -184,7 +180,6 @@ export default function Dashboard() {
                     <Header />
                     <main className="flex-1 overflow-auto">
                         <div className="p-6 space-y-6">
-                            {/* Page Header */}
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                                 <div>
                                     <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
@@ -197,9 +192,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* Stats Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {/* Total Sales Card */}
                                 <div className="bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg shadow-indigo-500/25">
                                     <div className="flex items-center justify-between">
                                         <div>
@@ -215,7 +208,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Total Orders Card */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg">
                                     <div className="flex items-center justify-between">
                                         <div>
@@ -231,7 +223,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Total Users Card */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg">
                                     <div className="flex items-center justify-between">
                                         <div>
@@ -247,7 +238,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Average Order Value Card */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg">
                                     <div className="flex items-center justify-between">
                                         <div>
@@ -264,9 +254,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* Charts Grid */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                {/* Sales Trend Chart */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Sales Trend (7 Hari Terakhir)</h3>
                                     <div className="h-80">
@@ -274,7 +262,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Monthly Performance */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Performance</h3>
                                     <div className="h-80">
@@ -283,9 +270,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* Bottom Row */}
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                {/* Product Categories */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg lg:col-span-1">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Categories</h3>
                                     <div className="h-64">
@@ -304,7 +289,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Top Products */}
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg lg:col-span-2">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Selling Products</h3>
                                     <div className="space-y-4">
