@@ -24,16 +24,19 @@ Dashboard admin untuk mengelola penjualan produk kecantikan dengan tampilan glas
 
 1. Clone repository ini
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 3. Jalankan development server:
+
    ```bash
    npm run dev
    ```
 4. Buka http://localhost:3000 di browser
 
 ## Struktur Projek
+
 ```text
 statistik-app/
 ├── app/

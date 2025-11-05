@@ -1,63 +1,91 @@
 'use client';
 import { useState } from 'react';
+import { Search, ChevronDown, User, Settings, LogOut, Menu } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+    onToggleSidebar?: () => void;
+}
+
+export default function Header({ onToggleSidebar }: HeaderProps) {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     return (
-        <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-40">
-            <div className="px-6 py-4">
+        <header className="bg-white/90 backdrop-blur-xl border-b border-gray-100 sticky top-0 z-20">
+            <div className="px-4 sm:px-6 lg:px-8 py-4">
                 <div className="flex items-center justify-between">
-                    {/* Search Bar */}
-                    <div className="flex-1 max-w-2xl">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="w-full pl-10 pr-4 py-2 bg-gray-100/50 border border-gray-300/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent backdrop-blur-sm"
-                            />
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
+                    <div className="flex items-center space-x-4 flex-1">
+                        <button
+                            onClick={onToggleSidebar}
+                            className="lg:hidden p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 text-gray-600 hover:text-indigo-600"
+                            aria-label="Toggle sidebar"
+                        >
+                            <Menu className="w-5 h-5" />
+                        </button>
+
+                        <div className="flex-1 max-w-2xl">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Search className="h-4 w-4 text-gray-600 z-30" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Cari Sesuatu..."
+                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-300 backdrop-blur-sm text-sm transition-all duration-200 placeholder-gray-400"
+                                />
                             </div>
                         </div>
                     </div>
-
-                    {/* Right Section */}
-                    <div className="flex items-center space-x-4">
-                        {/* Notifications */}
-                        <button className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors">
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.5 3.75a6 6 0 0 0-6 6v2.25l-2 2v3h6.5" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                            </svg>
-                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
-
-                        {/* Profile Dropdown */}
+                    <div className="flex items-center space-x-3">
                         <div className="relative">
                             <button
                                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100/50 transition-colors"
+                                className="flex items-center space-x-3 p-1.5 rounded-xl hover:bg-gray-100/80 transition-all duration-200 group"
                             >
-                                <div className="w-8 h-8 bg-linear-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                <div className="w-8 h-8 bg-linear-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md shadow-indigo-500/30">
                                     A
                                 </div>
                                 <div className="hidden md:block text-left">
-                                    <p className="text-sm font-medium text-gray-900">Admin</p>
+                                    <p className="text-sm font-semibold text-gray-900">Admin User</p>
                                     <p className="text-xs text-gray-500">Administrator</p>
                                 </div>
-                                <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
+                                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
                             </button>
 
+                            {/* Dropdown Menu */}
                             {isProfileOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-lg border border-gray-200/50 py-1">
-                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100/50">Profile</a>
-                                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100/50">Settings</a>
-                                    <a href="/login" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100/50">Logout</a>
+                                <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 py-2 transform origin-top-right transition-all duration-200">
+                                    {/* User Info */}
+                                    <div className="px-4 py-3 border-b border-gray-100/50">
+                                        <p className="text-sm font-semibold text-gray-900">Admin User</p>
+                                        <p className="text-xs text-gray-500 mt-1">admin@beautycare.com</p>
+                                    </div>
+
+                                    {/* Menu Items */}
+                                    <div className="py-1">
+                                        <a
+                                            href="#"
+                                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50/80 transition-colors duration-150 group"
+                                        >
+                                            <User className="w-4 h-4 mr-3 text-gray-400 group-hover:text-indigo-500" />
+                                            Profile Settings
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50/80 transition-colors duration-150 group"
+                                        >
+                                            <Settings className="w-4 h-4 mr-3 text-gray-400 group-hover:text-indigo-500" />
+                                            Account Preferences
+                                        </a>
+                                    </div>
+                                    <div className="border-t border-gray-100/50 pt-1">
+                                        <a
+                                            href="/login"
+                                            className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50/80 transition-colors duration-150 group"
+                                        >
+                                            <LogOut className="w-4 h-4 mr-3" />
+                                            Sign Out
+                                        </a>
+                                    </div>
                                 </div>
                             )}
                         </div>

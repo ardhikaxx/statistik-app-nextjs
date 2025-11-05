@@ -1,80 +1,138 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { 
+  LayoutDashboard, 
+  Users, 
+  Package,
+  Sparkles,
+  ChevronRight,
+  X,
+} from 'lucide-react';
 
-export default function Sidebar() {
+interface SidebarProps {
+  onToggleSidebar?: () => void;
+  isSidebarOpen?: boolean;
+}
+
+export default function Sidebar({ onToggleSidebar, isSidebarOpen = true }: SidebarProps) {
     const pathname = usePathname();
 
     const menuItems = [
         {
             name: 'Dashboard',
             href: '/page/dashboard',
-            icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10" />
-                </svg>
-            ),
+            icon: <LayoutDashboard className="w-5 h-5" />,
         },
         {
             name: 'Users',
             href: '/page/users',
-            icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                </svg>
-            ),
+            icon: <Users className="w-5 h-5" />,
         },
         {
             name: 'Products',
             href: '/page/products',
-            icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-            ),
+            icon: <Package className="w-5 h-5" />,
         },
     ];
 
     return (
-        <aside className="w-64 bg-white/80 backdrop-blur-md border-r border-gray-200/50 max-h-screen sticky top-0">
-            {/* Logo */}
-            <div className="p-6 border-b border-gray-200/50">
-                <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-linear-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-bold text-gray-900">BeautyCare</h1>
-                        <p className="text-xs text-gray-500">Admin Dashboard</p>
+        <>
+            {/* Overlay untuk mobile */}
+            {isSidebarOpen && (
+                <div 
+                    className="lg:hidden fixed inset-0 bg-black/50 z-40"
+                    onClick={onToggleSidebar}
+                />
+            )}
+            
+            <aside className={`
+                fixed lg:sticky top-0 left-0 h-svh bg-white/90 backdrop-blur-xl border-r border-gray-100 flex flex-col z-50
+                transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                w-64
+            `}>
+                <div className="p-6 border-b border-gray-100/70">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                <Sparkles className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex flex-col">
+                                <h1 className="text-xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                    BeautyCare
+                                </h1>
+                                <p className="text-xs text-gray-500 font-medium">Admin Dashboard</p>
+                            </div>
+                        </div>
+                        {/* Tombol X untuk menutup sidebar di mobile */}
+                        <button
+                            onClick={onToggleSidebar}
+                            className="lg:hidden p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 text-gray-600 hover:text-indigo-600"
+                            aria-label="Close sidebar"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            {/* Navigation */}
-            <nav className="p-4">
-                <ul className="space-y-2">
-                    {menuItems.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                            <li key={item.name}>
-                                <Link
-                                    href={item.href}
-                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
-                                            ? 'bg-linear-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
-                                            : 'text-gray-700 hover:bg-gray-100/50 hover:text-indigo-600'
-                                        }`}
-                                >
-                                    {item.icon}
-                                    <span className="font-medium">{item.name}</span>
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
-        </aside>
+                <nav className="flex-1 p-4">
+                    <div className="mb-6">
+                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
+                            Main Menu
+                        </h3>
+                        <ul className="space-y-1">
+                            {menuItems.map((item) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <li key={item.name}>
+                                        <Link
+                                            href={item.href}
+                                            onClick={() => {
+                                                // Tutup sidebar di mobile saat menu diklik
+                                                if (window.innerWidth < 1024) {
+                                                    onToggleSidebar?.();
+                                                }
+                                            }}
+                                            className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${
+                                                isActive
+                                                    ? 'bg-linear-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/30'
+                                                    : 'text-gray-600 hover:bg-gray-50/80 hover:text-indigo-600 hover:shadow-md'
+                                            }`}
+                                        >
+                                            <div className="flex items-center space-x-3">
+                                                <div className={`p-1 rounded-lg ${
+                                                    isActive 
+                                                        ? 'text-white' 
+                                                        : 'text-gray-400 group-hover:text-indigo-500'
+                                                }`}>
+                                                    {item.icon}
+                                                </div>
+                                                <span className="font-medium">{item.name}</span>
+                                            </div>
+                                            {isActive && (
+                                                <ChevronRight className="w-4 h-4 opacity-80" />
+                                            )}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </nav>
+
+                <div className="p-4 border-t border-gray-100/70">
+                    <div className="flex items-center space-x-3 p-3 rounded-xl bg-gray-50/50 hover:bg-gray-100/50 transition-colors duration-200 cursor-pointer">
+                        <div className="w-8 h-8 bg-linear-to-r from-gray-600 to-gray-400 rounded-full flex items-center justify-center">
+                            <span className="text-xs font-semibold text-white">A</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
+                            <p className="text-xs text-gray-500 truncate">admin@beautycare.com</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </>
     );
 }

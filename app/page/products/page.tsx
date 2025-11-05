@@ -2,8 +2,46 @@
 import Sidebar from '@/app/components/sidebar';
 import produkData from '../../data/data_produk.json';
 import Header from '@/app/components/header';
+import { useEffect, useState } from 'react';
+
+// Import Lucide Icons
+import {
+    Package,
+    DollarSign,
+    ShoppingCart,
+    Star,
+    Plus,
+    Edit,
+    Eye,
+    TrendingUp,
+    PackageOpen,
+    Image,
+    ShoppingBag,
+    Archive
+} from 'lucide-react';
 
 export default function Products() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setIsSidebarOpen(true);
+            } else {
+                setIsSidebarOpen(false);
+            }
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -28,13 +66,18 @@ export default function Products() {
     };
 
     const totalRevenue = produkData.reduce((total, product) => total + (product.price * product.sales), 0);
+    const totalSales = produkData.reduce((total, product) => total + product.sales, 0);
+    const averageRating = (produkData.reduce((total, product) => total + product.rating, 0) / produkData.length).toFixed(1);
 
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-100">
-            <div className="flex">
-                <Sidebar />
-                <div className="flex-1 flex flex-col">
-                    <Header />
+            <div className="flex h-screen">
+                <Sidebar
+                    isSidebarOpen={isSidebarOpen}
+                    onToggleSidebar={toggleSidebar}
+                />
+                <div className="flex-1 flex flex-col min-w-0">
+                    <Header onToggleSidebar={toggleSidebar} />
                     <main className="flex-1 overflow-auto">
                         <div className="p-6 space-y-6">
                             {/* Page Header */}
@@ -43,7 +86,8 @@ export default function Products() {
                                     <h1 className="text-2xl font-bold text-gray-900">Product Management</h1>
                                     <p className="text-gray-600">Kelola produk kecantikan BeautyCare</p>
                                 </div>
-                                <button className="mt-4 sm:mt-0 bg-linear-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 transform hover:-translate-y-0.5">
+                                <button className="mt-4 sm:mt-0 bg-linear-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 transform hover:-translate-y-0.5 flex items-center gap-2">
+                                    <Plus className="w-5 h-5" />
                                     Add New Product
                                 </button>
                             </div>
@@ -54,12 +98,13 @@ export default function Products() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-gray-600">Total Products</p>
-                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{produkData.length}</h3>
+                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{produkData.length.toLocaleString()}</h3>
+                                            <p className="text-sm text-blue-600 mt-1">
+                                                {produkData.filter(p => p.stock > 0).length} available
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                            </svg>
+                                            <Package className="w-6 h-6 text-blue-600" />
                                         </div>
                                     </div>
                                 </div>
@@ -69,11 +114,13 @@ export default function Products() {
                                         <div>
                                             <p className="text-gray-600">Total Revenue</p>
                                             <h3 className="text-2xl font-bold text-gray-900 mt-2">{formatCurrency(totalRevenue)}</h3>
+                                            <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
+                                                <TrendingUp className="w-3 h-3" />
+                                                +15.2% growth
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v1m0 6l-2.5 1.5M12 14l2.5 1.5M12 14v1m0-1v-1m-6.5-1.5L12 13m-6.5 1.5L12 16m0 5a9 9 0 110-18 9 9 0 010 18z" />
-                                            </svg>
+                                            <DollarSign className="w-6 h-6 text-green-600" />
                                         </div>
                                     </div>
                                 </div>
@@ -83,13 +130,14 @@ export default function Products() {
                                         <div>
                                             <p className="text-gray-600">Total Sales</p>
                                             <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                                                {produkData.reduce((total, product) => total + product.sales, 0).toLocaleString()}
+                                                {totalSales.toLocaleString()}
                                             </h3>
+                                            <p className="text-sm text-purple-600 mt-1">
+                                                Avg. {(totalSales / produkData.length).toFixed(0)} per product
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                            </svg>
+                                            <ShoppingCart className="w-6 h-6 text-purple-600" />
                                         </div>
                                     </div>
                                 </div>
@@ -99,13 +147,15 @@ export default function Products() {
                                         <div>
                                             <p className="text-gray-600">Avg. Rating</p>
                                             <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                                                {(produkData.reduce((total, product) => total + product.rating, 0) / produkData.length).toFixed(1)}
+                                                {averageRating}
                                             </h3>
+                                            <p className="text-sm text-yellow-600 mt-1 flex items-center gap-1">
+                                                <Star className="w-3 h-3 fill-yellow-400" />
+                                                {produkData.filter(p => p.rating >= 4).length} highly rated
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                            </svg>
+                                            <Star className="w-6 h-6 text-yellow-600 fill-yellow-400" />
                                         </div>
                                     </div>
                                 </div>
@@ -117,13 +167,22 @@ export default function Products() {
                                     const stockStatus = getStockStatus(product.stock);
                                     return (
                                         <div key={product.id} className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-200/50 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                                            {/* Product Image Placeholder */}
-                                            <div className="h-48 bg-linear-to-br from-indigo-100 to-purple-100 relative">
+                                            {/* Product Image Section */}
+                                            <div className="h-48 bg-linear-to-br from-indigo-100 to-purple-100 relative flex items-center justify-center">
+                                                {/* Image Icon */}
+                                                <div className="flex flex-col items-center justify-center text-indigo-400">
+                                                    <Image className="w-12 h-12 mb-2" />
+                                                    <span className="text-sm font-medium">Product Image</span>
+                                                </div>
+                                                
+                                                {/* Category Badge */}
                                                 <div className="absolute top-4 right-4">
                                                     <span className={getCategoryBadge(product.category)}>
                                                         {product.category}
                                                     </span>
                                                 </div>
+                                                
+                                                {/* Stock Status */}
                                                 <div className="absolute bottom-4 left-4">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${stockStatus.class}`}>
                                                         {stockStatus.text}
@@ -136,9 +195,7 @@ export default function Products() {
                                                 <div className="flex justify-between items-start mb-3">
                                                     <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
                                                     <div className="flex items-center space-x-1">
-                                                        <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                        </svg>
+                                                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                                                         <span className="text-sm font-medium text-gray-900">{product.rating}</span>
                                                     </div>
                                                 </div>
@@ -147,24 +204,22 @@ export default function Products() {
 
                                                 <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
                                                     <div className="flex items-center space-x-2">
-                                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                                        </svg>
-                                                        <span>{product.sales} sold</span>
+                                                        <ShoppingBag className="w-4 h-4" />
+                                                        <span>{product.sales.toLocaleString()} sold</span>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
-                                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                                        </svg>
-                                                        <span>{product.stock} in stock</span>
+                                                        <PackageOpen className="w-4 h-4" />
+                                                        <span>{product.stock.toLocaleString()} in stock</span>
                                                     </div>
                                                 </div>
 
                                                 <div className="flex space-x-3">
-                                                    <button className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                                                    <button className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                                                        <Edit className="w-4 h-4" />
                                                         Edit
                                                     </button>
-                                                    <button className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                                                    <button className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                                        <Eye className="w-4 h-4" />
                                                         View
                                                     </button>
                                                 </div>
@@ -178,6 +233,5 @@ export default function Products() {
                 </div>
             </div>
         </div>
-
     );
 }

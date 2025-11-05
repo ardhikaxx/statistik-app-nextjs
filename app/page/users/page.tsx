@@ -2,8 +2,42 @@
 import Header from '@/app/components/header';
 import userData from '../../data/data_user.json';
 import Sidebar from '@/app/components/sidebar';
+import { useEffect, useState } from 'react';
+import {
+    User,
+    UserCheck,
+    ShoppingCart,
+    DollarSign,
+    Plus,
+    Edit,
+    Trash2,
+    Phone,
+    Calendar,
+    Mail
+} from 'lucide-react';
 
 export default function Users() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setIsSidebarOpen(true);
+            } else {
+                setIsSidebarOpen(false);
+            }
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -29,37 +63,42 @@ export default function Users() {
         }
     };
 
+    const totalUsers = userData.length;
+    const activeUsers = userData.filter(user => user.status === 'active').length;
+    const totalOrders = userData.reduce((total, user) => total + user.totalOrders, 0);
+    const totalRevenue = userData.reduce((total, user) => total + user.totalSpent, 0);
+
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-100">
-            <div className="flex">
-                <Sidebar />
-                <div className="flex-1 flex flex-col">
-                    <Header />
+            <div className="flex h-screen">
+                <Sidebar
+                    isSidebarOpen={isSidebarOpen}
+                    onToggleSidebar={toggleSidebar}
+                />
+                <div className="flex-1 flex flex-col min-w-0">
+                    <Header onToggleSidebar={toggleSidebar} />
                     <main className="flex-1 overflow-auto">
                         <div className="p-6 space-y-6">
-                            {/* Page Header */}
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                                 <div>
                                     <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
                                     <p className="text-gray-600">Kelola data pengguna BeautyCare</p>
                                 </div>
-                                <button className="mt-4 sm:mt-0 bg-linear-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 transform hover:-translate-y-0.5">
+                                <button className="mt-4 sm:mt-0 bg-linear-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 transform hover:-translate-y-0.5 flex items-center gap-2">
+                                    <Plus className="w-5 h-5" />
                                     Add New User
                                 </button>
                             </div>
 
-                            {/* Stats Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200/50 shadow-lg">
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-gray-600">Total Users</p>
-                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{userData.length}</h3>
+                                            <h3 className="text-2xl font-bold text-gray-900 mt-2">{totalUsers.toLocaleString()}</h3>
                                         </div>
                                         <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                                            </svg>
+                                            <User className="w-6 h-6 text-blue-600" />
                                         </div>
                                     </div>
                                 </div>
@@ -69,13 +108,14 @@ export default function Users() {
                                         <div>
                                             <p className="text-gray-600">Active Users</p>
                                             <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                                                {userData.filter(user => user.status === 'active').length}
+                                                {activeUsers.toLocaleString()}
                                             </h3>
+                                            <p className="text-sm text-green-600 mt-1">
+                                                {((activeUsers / totalUsers) * 100).toFixed(1)}% active rate
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <UserCheck className="w-6 h-6 text-green-600" />
                                         </div>
                                     </div>
                                 </div>
@@ -85,13 +125,14 @@ export default function Users() {
                                         <div>
                                             <p className="text-gray-600">Total Orders</p>
                                             <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                                                {userData.reduce((total, user) => total + user.totalOrders, 0)}
+                                                {totalOrders.toLocaleString()}
                                             </h3>
+                                            <p className="text-sm text-purple-600 mt-1">
+                                                Avg. {(totalOrders / totalUsers).toFixed(1)} per user
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                            </svg>
+                                            <ShoppingCart className="w-6 h-6 text-purple-600" />
                                         </div>
                                     </div>
                                 </div>
@@ -101,25 +142,30 @@ export default function Users() {
                                         <div>
                                             <p className="text-gray-600">Total Revenue</p>
                                             <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                                                {formatCurrency(userData.reduce((total, user) => total + user.totalSpent, 0))}
+                                                {formatCurrency(totalRevenue)}
                                             </h3>
+                                            <p className="text-sm text-indigo-600 mt-1">
+                                                Avg. {formatCurrency(totalRevenue / totalUsers)} per user
+                                            </p>
                                         </div>
                                         <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                                            <svg className="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v1m0 6l-2.5 1.5M12 14l2.5 1.5M12 14v1m0-1v-1m-6.5-1.5L12 13m-6.5 1.5L12 16m0 5a9 9 0 110-18 9 9 0 010 18z" />
-                                            </svg>
+                                            <DollarSign className="w-6 h-6 text-indigo-600" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Users Table */}
                             <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-200/50 shadow-lg overflow-hidden">
                                 <div className="px-6 py-4 border-b border-gray-200/50">
-                                    <h3 className="text-lg font-semibold text-gray-900">User List</h3>
+                                    <div className="flex items-center gap-2">
+                                        <User className="w-5 h-5 text-gray-700" />
+                                        <h3 className="text-lg font-semibold text-gray-900">User List</h3>
+                                        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-sm">
+                                            {totalUsers} users
+                                        </span>
+                                    </div>
                                 </div>
-
-                                {/* Table */}
+                                
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
                                         <thead>
@@ -143,21 +189,34 @@ export default function Users() {
                                                             </div>
                                                             <div className="ml-4">
                                                                 <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                                                <div className="text-sm text-gray-500">{user.email}</div>
+                                                                <div className="text-sm text-gray-500 flex items-center gap-1">
+                                                                    <Mail className="w-3 h-3" />
+                                                                    {user.email}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-900">{user.phone}</div>
+                                                        <div className="text-sm text-gray-900 flex items-center gap-1">
+                                                            <Phone className="w-3 h-3" />
+                                                            {user.phone}
+                                                        </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-900">{formatDate(user.joinDate)}</div>
+                                                        <div className="text-sm text-gray-900 flex items-center gap-1">
+                                                            <Calendar className="w-3 h-3" />
+                                                            {formatDate(user.joinDate)}
+                                                        </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-900">{user.totalOrders}</div>
+                                                        <div className="text-sm text-gray-900 font-medium">
+                                                            {user.totalOrders}
+                                                        </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm font-medium text-gray-900">{formatCurrency(user.totalSpent)}</div>
+                                                        <div className="text-sm font-medium text-gray-900">
+                                                            {formatCurrency(user.totalSpent)}
+                                                        </div>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <span className={getStatusBadge(user.status)}>
@@ -165,8 +224,16 @@ export default function Users() {
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                        <button className="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                                                        <button className="text-red-600 hover:text-red-900">Delete</button>
+                                                        <div className="flex items-center gap-2">
+                                                            <button className="text-indigo-600 hover:text-indigo-900 flex items-center gap-1 transition-colors">
+                                                                <Edit className="w-4 h-4" />
+                                                                Edit
+                                                            </button>
+                                                            <button className="text-red-600 hover:text-red-900 flex items-center gap-1 transition-colors">
+                                                                <Trash2 className="w-4 h-4" />
+                                                                Delete
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
