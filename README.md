@@ -34,7 +34,7 @@ Dashboard admin untuk mengelola penjualan produk kecantikan dengan tampilan glas
 4. Buka http://localhost:3000 di browser
 
 ## Struktur Projek
-
+```text
 statistik-app/
 ├── app/
 │   ├── components/
@@ -56,3 +56,4 @@ statistik-app/
 │   ├── layout.tsx
 │   ├── page.tsx
 │   └── globals.css
+```
