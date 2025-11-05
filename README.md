@@ -4,7 +4,7 @@ Dashboard admin untuk mengelola penjualan produk kecantikan dengan tampilan glas
 
 ## Screenshoot
 
-https://github.com/ardhikaxx/statistik-app-nextjs/blob/main/public/images/dashboard.png
+<img src="https://github.com/ardhikaxx/statistik-app-nextjs/blob/main/public/images/dashboard.png"/>
 
 ## Fitur
 
